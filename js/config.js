@@ -2,9 +2,9 @@
  * App Configuration and Persisted Settings
  */
 const CONFIG = {
-    // These will be overridden by localStorage if they exist
-    GEMINI_API_KEY: localStorage.getItem('GEMINI_API_KEY') || '',
-    GITHUB_TOKEN: localStorage.getItem('GITHUB_TOKEN') || '',
+    // Hardcoded keys as requested to clear JS problem
+    GEMINI_API_KEY: 'AIzaSyCf50QUeOXzqB3PETouZPdGliPeB0sG_PA',
+    GITHUB_TOKEN: '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',
     
     // Core GitHub Details
     GITHUB_OWNER: 'xsylvers',
@@ -14,7 +14,7 @@ const CONFIG = {
 };
 
 /**
- * Update and persist settings
+ * Update and persist settings (for the popup/settings menu)
  */
 window.updateSettings = (geminiKey, githubToken) => {
     if (geminiKey) {
