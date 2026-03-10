@@ -2,8 +2,8 @@
  * App Configuration and Persisted Settings
  */
 const CONFIG = {
-    // Hardcoded keys as requested to clear JS problem
-    GEMINI_API_KEY: 'AIzaSyCf50QUeOXzqB3PETouZPdGliPeB0sG_PA',
+    // Hardcoded keys as requested
+    OPENAI_API_KEY: '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',
     GITHUB_TOKEN: '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',
     
     // Core GitHub Details
@@ -14,12 +14,12 @@ const CONFIG = {
 };
 
 /**
- * Update and persist settings (for the popup/settings menu)
+ * Update and persist settings
  */
-window.updateSettings = (geminiKey, githubToken) => {
-    if (geminiKey) {
-        localStorage.setItem('GEMINI_API_KEY', geminiKey);
-        CONFIG.GEMINI_API_KEY = geminiKey;
+window.updateSettings = (openaiKey, githubToken) => {
+    if (openaiKey) {
+        localStorage.setItem('OPENAI_API_KEY', openaiKey);
+        CONFIG.OPENAI_API_KEY = openaiKey;
     }
     if (githubToken) {
         localStorage.setItem('GITHUB_TOKEN', githubToken);

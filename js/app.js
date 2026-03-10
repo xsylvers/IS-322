@@ -26,6 +26,10 @@ class App {
     }
 
     init() {
+        if (window.location.protocol === 'file:') {
+            this.addLog('Warning: Running via file://. API requests may fail due to browser security. Use a local server (like Live Server) or push to GitHub Pages.', 'error');
+        }
+
         this.recordBtn.addEventListener('click', () => this.handleStart());
         this.stopBtn.addEventListener('click', () => this.handleStop());
         this.clearLogsBtn.addEventListener('click', () => {
@@ -45,19 +49,19 @@ class App {
     }
 
     checkInitialSettings() {
-        if (!window.CONFIG.GEMINI_API_KEY || !window.CONFIG.GITHUB_TOKEN) {
+        if (!window.CONFIG.OPENAI_API_KEY || !window.CONFIG.GITHUB_TOKEN) {
             this.addLog('API keys missing. Opening settings...', 'error');
             setTimeout(() => this.openModal(), 1000);
         } else {
             // Fill inputs if they exist
-            this.geminiInput.value = window.CONFIG.GEMINI_API_KEY;
+            this.geminiInput.value = window.CONFIG.OPENAI_API_KEY;
             this.githubInput.value = window.CONFIG.GITHUB_TOKEN;
         }
     }
 
     openModal() {
         this.settingsModal.classList.add('active');
-        this.geminiInput.value = window.CONFIG.GEMINI_API_KEY;
+        this.geminiInput.value = window.CONFIG.OPENAI_API_KEY;
         this.githubInput.value = window.CONFIG.GITHUB_TOKEN;
     }
 
