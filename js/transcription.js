@@ -6,8 +6,7 @@ class TranscriptionModule {
         const apiKey = window.CONFIG.GEMINI_API_KEY;
         
         if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-            // Fallback to OpenAI if Gemini isn't available for transcription
-            return this.transcribeUsingOpenAI(audioBlob);
+            throw new Error("Gemini API Key is not configured correctly in js/config.js. Please check your key.");
         }
 
         try {
@@ -34,38 +33,16 @@ class TranscriptionModule {
             }
 
             const data = await response.json();
+            
+            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                throw new Error("Gemini failed to generate a transcript. Please try speaking more clearly.");
+            }
+
             return data.candidates[0].content.parts[0].text.trim();
         } catch (error) {
             console.error("Gemini transcription failed:", error);
             throw error;
         }
-    }
-
-    async transcribeUsingOpenAI(audioBlob) {
-        const apiKey = window.CONFIG.OPENAI_API_KEY;
-        if (!apiKey || apiKey === 'YOUR_OPENAI_API_KEY_HERE') {
-            throw new Error("Gemini API Key is not configured correctly in js/config.js. Please check your key.");
-        }
-
-        const formData = new FormData();
-        formData.append('file', audioBlob, 'recording.wav');
-        formData.append('model', 'whisper-1');
-
-        const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: formData
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Whisper API Error: ${errorData.error?.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data.text;
     }
 
     blobToBase64(blob) {

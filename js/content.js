@@ -6,8 +6,7 @@ class ContentModule {
         const apiKey = window.CONFIG.GEMINI_API_KEY;
         
         if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-            // Fallback to OpenAI if Gemini isn't set (original logic)
-            return this.formatUsingOpenAI(transcript);
+            throw new Error("Gemini API Key is not configured correctly in js/config.js. Please check your key.");
         }
 
         const prompt = `You are a professional blog post creator. 
@@ -43,50 +42,20 @@ class ContentModule {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Gemini API Error: ${errorData.error?.message || response.statusText}`);
+                throw new Error(`Gemini Formatting Error: ${errorData.error?.message || response.statusText}`);
             }
 
             const data = await response.json();
-            // Gemini response structure: data.candidates[0].content.parts[0].text
+            
+            if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                throw new Error("Gemini failed to format the blog post. Please try again.");
+            }
+
             return data.candidates[0].content.parts[0].text.trim();
         } catch (error) {
             console.error("Gemini content formatting failed:", error);
             throw error;
         }
-    }
-
-    async formatUsingOpenAI(transcript) {
-        const apiKey = window.CONFIG.OPENAI_API_KEY;
-        if (!apiKey || apiKey === 'YOUR_OPENAI_API_KEY_HERE') {
-            throw new Error("Neither Gemini nor OpenAI API Keys are configured in js/config.js");
-        }
-
-        const systemPrompt = `You are a professional blog post creator. Output ONLY RAW MARKDOWN.`;
-        const userPrompt = `Transcript: "${transcript}"`;
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o',
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: userPrompt }
-                ],
-                temperature: 0.7
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`OpenAI API Error: ${errorData.error?.message || response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content.trim();
     }
 }
 
