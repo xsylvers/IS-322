@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice2Blog - Serverless POC</title>
+    <meta name="description" content="Convert your voice into professional blog posts published directly to GitHub.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <h1 class="logo">Voice<span>2</span>Blog</h1>
+            <p class="subtitle">Turn your voice into a blog post in seconds.</p>
+        </header>
+
+        <section class="recorder-card">
+            <div class="timer" id="timer">00:00</div>
+            <div class="controls">
+                <button id="recordBtn" class="btn btn-record" title="Start Recording">
+                    <span class="icon"></span>
+                    <span class="label">Record</span>
+                </button>
+                <button id="stopBtn" class="btn btn-stop" disabled title="Stop and Submit">
+                    <span class="icon"></span>
+                    <span class="label">Stop & Submit</span>
+                </button>
+            </div>
+            
+            <div class="status-panel">
+                <div class="status-header">
+                    <span>Logs & Progress</span>
+                    <button id="clearLogs" class="btn-text">Clear</button>
+                </div>
+                <div id="statusLogs" class="status-logs">
+                    <div class="log-entry system">Ready to record...</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Serverless Voice-to-Blog POC &bull; IS 322 Project</p>
+        </footer>
+    </main>
+
+    <!-- Project Config (Placeholder for API Keys) -->
+    <script src="js/config.js"></script>
+    
+    <!-- Modular Logic -->
+    <script src="js/audio.js"></script>
+    <script src="js/transcription.js"></script>
+    <script src="js/content.js"></script>
+    <script src="js/github.js"></script>
+    
+    <!-- Main Orchestrator -->
+    <script src="js/app.js"></script>
+</body>
+</html>

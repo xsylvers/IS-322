@@ -1,0 +1,15 @@
+# Project Configuration
+# Editing this file triggers an automatic redeploy via GitHub Actions
+
+site_settings:
+  title: "Voice2Blog POC"
+  description: "Serverless Voice-to-Blog Application"
+  
+github_integration:
+  owner: "xsylvers"
+  repo: "IS-322"
+  post_folder: "posts/"
+  default_branch: "main"
+  
+# Note: API Keys should NOT be stored here. 
+# Use js/config.js for local development or GitHub Secrets for deployment.
