@@ -70,7 +70,7 @@ class App {
 
         try {
             const audioBlob = await window.AudioModule.stopRecording();
-            this.addLog('Audio captured. Sending to Whisper...', 'info');
+            this.addLog('Audio captured. Transcribing with AI...', 'info');
 
             // 1. Transcription
             const transcript = await window.TranscriptionModule.transcribe(audioBlob);

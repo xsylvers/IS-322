@@ -2,7 +2,6 @@
  * App Configuration and API Key Placeholders
  */
 const CONFIG = {
-    OPENAI_API_KEY: 'YOUR_OPENAI_API_KEY_HERE',
     GEMINI_API_KEY: 'AIzaSyCf50QUeOXzqB3PETouZPdGliPeB0sG_PA',
     GITHUB_TOKEN: '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',
     GITHUB_OWNER: 'xsylvers',
