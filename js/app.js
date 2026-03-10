@@ -9,11 +9,20 @@ class App {
         this.statusLogs = document.getElementById('statusLogs');
         this.clearLogsBtn = document.getElementById('clearLogs');
 
+        // Modal Elements
+        this.settingsBtn = document.getElementById('settingsBtn');
+        this.settingsModal = document.getElementById('settingsModal');
+        this.closeModalBtn = document.getElementById('closeModal');
+        this.saveSettingsBtn = document.getElementById('saveSettings');
+        this.geminiInput = document.getElementById('geminiKey');
+        this.githubInput = document.getElementById('githubToken');
+
         this.seconds = 0;
         this.timerInterval = null;
         this.isRecording = false;
 
         this.init();
+        this.checkInitialSettings();
     }
 
     init() {
@@ -23,6 +32,51 @@ class App {
             this.statusLogs.innerHTML = '';
             this.addLog('Logs cleared.', 'system');
         });
+
+        // Settings Modal Events
+        this.settingsBtn.addEventListener('click', () => this.openModal());
+        this.closeModalBtn.addEventListener('click', () => this.closeModal());
+        this.saveSettingsBtn.addEventListener('click', () => this.saveSettings());
+        
+        // Close modal on outside click
+        window.onclick = (event) => {
+            if (event.target == this.settingsModal) this.closeModal();
+        };
+    }
+
+    checkInitialSettings() {
+        if (!window.CONFIG.GEMINI_API_KEY || !window.CONFIG.GITHUB_TOKEN) {
+            this.addLog('API keys missing. Opening settings...', 'error');
+            setTimeout(() => this.openModal(), 1000);
+        } else {
+            // Fill inputs if they exist
+            this.geminiInput.value = window.CONFIG.GEMINI_API_KEY;
+            this.githubInput.value = window.CONFIG.GITHUB_TOKEN;
+        }
+    }
+
+    openModal() {
+        this.settingsModal.classList.add('active');
+        this.geminiInput.value = window.CONFIG.GEMINI_API_KEY;
+        this.githubInput.value = window.CONFIG.GITHUB_TOKEN;
+    }
+
+    closeModal() {
+        this.settingsModal.classList.remove('active');
+    }
+
+    saveSettings() {
+        const geminiVal = this.geminiInput.value.trim();
+        const githubVal = this.githubInput.value.trim();
+
+        if (!geminiVal || !githubVal) {
+            alert('Please provide both keys.');
+            return;
+        }
+
+        window.updateSettings(geminiVal, githubVal);
+        this.addLog('Settings saved successfully.', 'success');
+        this.closeModal();
     }
 
     addLog(message, type = 'info') {

@@ -19,7 +19,12 @@
 
     <main class="container">
         <header>
-            <h1 class="logo">Voice<span>2</span>Blog</h1>
+            <div class="header-top">
+                <h1 class="logo">Voice<span>2</span>Blog</h1>
+                <button id="settingsBtn" class="btn-icon" title="Settings">
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5A3.5 3.5 0 0 1 15.5 12A3.5 3.5 0 0 1 12 15.5M19.43 12.97c0-.32-.03-.66-.03-1c0-.33.03-.68.03-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.63c-.03.34-.03.68-.03 1s0 .67.03 1l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.39 1.06.73 1.69.98l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"></path></svg>
+                </button>
+            </div>
             <p class="subtitle">Turn your voice into a blog post in seconds.</p>
         </header>
 
@@ -51,6 +56,30 @@
             <p>Serverless Voice-to-Blog POC &bull; IS 322 Project</p>
         </footer>
     </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>API Settings</h2>
+                <button id="closeModal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="geminiKey">Gemini API Key</label>
+                    <input type="password" id="geminiKey" placeholder="AIzaSy...">
+                </div>
+                <div class="input-group">
+                    <label for="githubToken">GitHub Token (ghp_...)</label>
+                    <input type="password" id="githubToken" placeholder="ghp_...">
+                </div>
+                <p class="hint">Keys are saved locally in your browser (LocalStorage).</p>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettings" class="btn btn-stop">Save Settings</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Project Config (Placeholder for API Keys) -->
     <script src="js/config.js"></script>
