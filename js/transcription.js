@@ -19,7 +19,7 @@ class TranscriptionModule {
 
         const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         // Use a free public CORS proxy for GitHub Pages so it doesn't get blocked
-        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://corsproxy.io/?https://api.openai.com/';
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://proxy.cors.sh/https://api.openai.com/';
         const targetUrl = `${apiDomain}${(isLocalProxy ? '' : '')}v1/audio/transcriptions`;
 
         try {
