@@ -3,23 +3,44 @@
  */
 class TranscriptionModule {
     async transcribe(audioBlob) {
-        const apiKey = window.CONFIG.OPENAI_API_KEY;
+        const apiKey = window.CONFIG.OPENAI_API_KEY.trim();
         
-        if (!apiKey || apiKey === 'YOUR_OPENAI_API_KEY_HERE') {
-            throw new Error("OpenAI API Key is not configured in js/config.js");
+        if (!apiKey || apiKey.startsWith('YOUR_')) {
+            throw new Error("OpenAI API Key is not configured correctly in js/config.js.");
+        }
+
+        if (audioBlob.size === 0) {
+            throw new Error("Audio recording is empty. Please try recording again.");
         }
 
         const formData = new FormData();
         formData.append('file', audioBlob, 'recording.wav');
         formData.append('model', 'whisper-1');
 
+        const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://api.openai.com/';
+        const targetUrl = `${apiDomain}${(isLocalProxy ? '' : '')}v1/audio/transcriptions`;
+
         try {
-            const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            console.log(`Initiating Whisper API fetch via ${isLocalProxy ? 'Local Proxy' : 'Direct API'}...`);
+            
+            const response = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: formData
+            }).catch(err => {
+                console.error("Fetch error object:", err);
+                let msg = "Network error: 'Failed to fetch'. ";
+                if (window.location.protocol === 'file:') {
+                    msg += "REASON: You are running via file://. Use RUN_APP.bat instead.";
+                } else if (isLocalProxy) {
+                    msg += "REASON: The local proxy server failed. Restart RUN_APP.bat and refresh the page.";
+                } else {
+                    msg += "REASON: Your browser or an ad-blocker is blocking OpenAI. Please disable ad-blockers/VPNs or try another browser.";
+                }
+                throw new Error(msg);
             });
 
             if (!response.ok) {
@@ -30,7 +51,7 @@ class TranscriptionModule {
             const data = await response.json();
             return data.text;
         } catch (error) {
-            console.error("Transcription failed:", error);
+            console.error("Transcription failed detail:", error);
             throw error;
         }
     }

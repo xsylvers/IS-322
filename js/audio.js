@@ -31,7 +31,7 @@ class AudioModule {
     stopRecording() {
         return new Promise((resolve) => {
             this.mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+                const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
                 this.stream.getTracks().forEach(track => track.stop());
                 console.log("Recording stopped. Blob created.");
                 resolve(audioBlob);
