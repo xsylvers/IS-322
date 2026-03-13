@@ -17,19 +17,30 @@ class TranscriptionModule {
         formData.append('file', audioBlob, 'recording.wav');
         formData.append('model', 'whisper-1');
 
+        const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://api.openai.com/';
+        const targetUrl = `${apiDomain}${(isLocalProxy ? '' : '')}v1/audio/transcriptions`;
+
         try {
-            console.log("Initiating Whisper API fetch...");
-            const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            console.log(`Initiating Whisper API fetch via ${isLocalProxy ? 'Local Proxy' : 'Direct API'}...`);
+            
+            const response = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: formData
             }).catch(err => {
-                if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
-                    throw new Error("Network error: 'Failed to fetch'. This often happens if you are running the file locally (file://) or if an ad-blocker is blocking OpenAI. Try running on a local server or disable ad-blockers.");
+                console.error("Fetch error object:", err);
+                let msg = "Network error: 'Failed to fetch'. ";
+                if (window.location.protocol === 'file:') {
+                    msg += "REASON: You are running via file://. Use RUN_APP.bat instead.";
+                } else if (isLocalProxy) {
+                    msg += "REASON: The local proxy server failed. Restart RUN_APP.bat and refresh the page.";
+                } else {
+                    msg += "REASON: Your browser or an ad-blocker is blocking OpenAI. Please disable ad-blockers/VPNs or try another browser.";
                 }
-                throw err;
+                throw new Error(msg);
             });
 
             if (!response.ok) {

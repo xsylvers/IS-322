@@ -9,6 +9,9 @@ class GitHubModule {
             throw new Error("GitHub Token is not configured in js/config.js");
         }
 
+        const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/github/` : 'https://api.github.com/';
+
         // Generate a random filename with date
         const date = new String(new Date().toISOString().split('T')[0]);
         const randomId = Math.random().toString(36).substring(2, 7);
@@ -16,7 +19,6 @@ class GitHubModule {
         const path = `${GITHUB_PATH}${fileName}`;
 
         // Prepare Base64 content
-        // Need to use TextEncoder for UTF-8 and then btoa for Base64 safely
         const bytes = new TextEncoder().encode(markdownContent);
         const base64Content = btoa(String.fromCharCode(...bytes));
 
@@ -26,8 +28,11 @@ class GitHubModule {
             branch: GITHUB_BRANCH
         };
 
+        const targetUrl = `${apiDomain}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+
         try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`, {
+            console.log(`Initiating GitHub Publish via ${isLocalProxy ? 'Local Proxy' : 'Direct API'}...`);
+            const response = await fetch(targetUrl, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `token ${GITHUB_TOKEN}`,

@@ -2,14 +2,8 @@
  * Content Structuring Logic using OpenAI Chat Completion API
  */
 class ContentModule {
-    async formatAsBlogPost(transcript) {
-        const apiKey = window.CONFIG.OPENAI_API_KEY.trim();
-        
-        if (!apiKey || apiKey.startsWith('YOUR_')) {
-            throw new Error("OpenAI API Key is not configured correctly in js/config.js.");
-        }
-
-        const systemPrompt = `You are a professional blog post creator. 
+    getSystemPrompt() {
+        return `You are a professional blog post creator. 
         Your task is to take a raw voice transcript and turn it into a high-quality, engaging Markdown blog post.
         Strict Rules:
         1. Output ONLY RAW MARKDOWN. No explanations, no introductory text, no conversational filler.
@@ -18,11 +12,25 @@ class ContentModule {
         4. Fix any obvious transcription errors while preserving the speaker's core intent.
         5. Use bullet points or numbered lists where appropriate for readability.
         6. Start immediately with the Markdown content.`;
+    }
+
+    async formatAsBlogPost(transcript) {
+        const apiKey = window.CONFIG.OPENAI_API_KEY.trim();
+        
+        if (!apiKey || apiKey.startsWith('YOUR_')) {
+            throw new Error("OpenAI API Key is not configured correctly in js/config.js.");
+        }
+
+        const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://api.openai.com/';
+        const targetUrl = `${apiDomain}v1/chat/completions`;
 
         const userPrompt = `Transcript: "${transcript}"`;
 
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            console.log(`Initiating Content API fetch via ${isLocalProxy ? 'Local Proxy' : 'Direct API'}...`);
+            
+            const response = await fetch(targetUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,7 +39,7 @@ class ContentModule {
                 body: JSON.stringify({
                     model: 'gpt-4o',
                     messages: [
-                        { role: 'system', content: systemPrompt },
+                        { role: 'system', content: this.getSystemPrompt() },
                         { role: 'user', content: userPrompt }
                     ],
                     temperature: 0.7

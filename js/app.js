@@ -27,7 +27,7 @@ class App {
 
     init() {
         if (window.location.protocol === 'file:') {
-            this.addLog('Warning: Running via file://. API requests may fail due to browser security. Use a local server (like Live Server) or push to GitHub Pages.', 'error');
+            this.addLog('Error: Security Block. You must run the app through a server. Close this and double-click the "RUN_APP.bat" file in your folder.', 'error');
         }
 
         this.recordBtn.addEventListener('click', () => this.handleStart());

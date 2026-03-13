@@ -2,9 +2,9 @@
  * App Configuration and Persisted Settings
  */
 const CONFIG = {
-    // Hardcoded keys as requested
-    OPENAI_API_KEY: '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',
-    GITHUB_TOKEN: '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',
+    // Hardcoded keys as requested (fallback)
+    OPENAI_API_KEY: localStorage.getItem('OPENAI_API_KEY') || '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',
+    GITHUB_TOKEN: localStorage.getItem('GITHUB_TOKEN') || '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',
     
     // Core GitHub Details
     GITHUB_OWNER: 'xsylvers',
