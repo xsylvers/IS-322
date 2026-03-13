@@ -10,7 +10,8 @@ class GitHubModule {
         }
 
         const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/github/` : 'https://api.github.com/';
+        // Use a free public CORS proxy for GitHub Pages so it doesn't get blocked
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/github/` : 'https://corsproxy.io/?https://api.github.com/';
 
         // Generate a random filename with date
         const date = new String(new Date().toISOString().split('T')[0]);

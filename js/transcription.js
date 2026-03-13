@@ -18,7 +18,8 @@ class TranscriptionModule {
         formData.append('model', 'whisper-1');
 
         const isLocalProxy = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://api.openai.com/';
+        // Use a free public CORS proxy for GitHub Pages so it doesn't get blocked
+        const apiDomain = isLocalProxy ? `${window.location.origin}/proxy/openai/` : 'https://corsproxy.io/?https://api.openai.com/';
         const targetUrl = `${apiDomain}${(isLocalProxy ? '' : '')}v1/audio/transcriptions`;
 
         try {
