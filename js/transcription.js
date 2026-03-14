@@ -5,6 +5,13 @@ class TranscriptionModule {
     async transcribe(audioBlob) {
         const apiKey = window.CONFIG.OPENAI_API_KEY.trim();
         
+        if (apiKey.toLowerCase() === 'demo') {
+            console.log("Demo Mode Active: Returning mock transcript.");
+            // Artificial delay for realism
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            return "This is a demonstration of the Voice to Blog application. In a real scenario, this text would be generated from your recorded audio using the OpenAI Whisper API. For now, we are just using a mock response to test the user interface.";
+        }
+
         if (!apiKey || apiKey.startsWith('YOUR_')) {
             throw new Error("OpenAI API Key is not configured correctly in js/config.js.");
         }
